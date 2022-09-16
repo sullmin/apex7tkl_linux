@@ -19,6 +19,7 @@ TARGETS = [
     { "name": "apex7", "idVendor": 0x1038, "idProduct": 0x1612 },
     { "name": "apex7tkl", "idVendor": 0x1038, "idProduct": 0x1618 },
     { "name": "apex5", "idVendor": 0x1038, "idProduct": 0x161c },
+    { "name": "apex7pro", "idVendor": 0x1038, "idProduct": 0x1610 }
 ]
 
 def find_device():
