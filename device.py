@@ -16,10 +16,10 @@ import oled
 DEFAULT_LEN = 642
 
 TARGETS = [
-    { "name": "apex7", "idVendor": 0x1038, "idProduct": 0x1612 },
-    { "name": "apex7tkl", "idVendor": 0x1038, "idProduct": 0x1618 },
-    { "name": "apex5", "idVendor": 0x1038, "idProduct": 0x161c },
-    { "name": "apex7pro", "idVendor": 0x1038, "idProduct": 0x1610 }
+    { "name": "apex7", "idVendor": 0x1038, "idProduct": 0x1612, "oledPreamble": [0x65] },
+    { "name": "apex7tkl", "idVendor": 0x1038, "idProduct": 0x1618, "oledPreamble": [0x65] },
+    { "name": "apex5", "idVendor": 0x1038, "idProduct": 0x161c, "oledPreamble": [0x65] },
+    { "name": "apexpro", "idVendor": 0x1038, "idProduct": 0x1610, "oledPreamble": [0x61] }
 ]
 
 def find_device():
@@ -50,7 +50,7 @@ def reattach_kernel(dev, was_detached):
     usb.util.dispose_resources(dev)
     if was_detached:
         try:
-            print("dev::artach_kernel_driver - interface 1")
+            print("dev::attach_kernel_driver - interface 1")
             dev.attach_kernel_driver(1)
         except USBError as e:
             print("dev::attach_kernel_driver failed" + str(e))
@@ -100,18 +100,18 @@ class Device():
     def oled_image(self, filename):
         imagedata = oled.image_to_payload(filename)
         if imagedata is list[int]:
-            report = oled.OLED_PREAMBLE + imagedata
+            report = self.target['oledPreamble'] + imagedata
             self.send(0x300, 0x01, report)
         else:
             while True:
                 for it in imagedata:
-                    report = oled.OLED_PREAMBLE + it
+                    report = self.target['oledPreamble'] + it
                     sleep(0.1)
                     self.send(0x300, 0x01, report)
 
     def oled_text(self, text):
         imagedata = oled.text_payload(text)
-        report = oled.OLED_PREAMBLE + imagedata
+        report = self.target['oledPreamble'] + imagedata
         self.send(0x300, 0x01, report)
 
     def oled_monitor(self):
@@ -130,7 +130,7 @@ class Device():
                     ## print(msg)
                     ## print("MSG END")
                     imagedata = oled.text_payload(msg)
-                    report = oled.OLED_PREAMBLE + imagedata
+                    report = self.target['oledPreamble'] + imagedata
                     self.send(0x300, 0x01, report)
                     sleep(0.1)
                 ## print("NEXT")

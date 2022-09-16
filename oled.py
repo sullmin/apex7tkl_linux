@@ -48,8 +48,6 @@ OLED_HEIGHT = 40
 
 full = [ord(x) for x in full]
 
-#OLED_PREAMBLE = [0x65, 0xfc]
-OLED_PREAMBLE = [0x65]
 
 #print("[%s]" % (", ".join(map(hex, full))), len(full))
 
